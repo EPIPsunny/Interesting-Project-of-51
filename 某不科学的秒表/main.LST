@@ -1,0 +1,126 @@
+C51 COMPILER V9.01   MAIN                                                                  07/30/2021 20:22:34 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\51software\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          typedef unsigned char u8;
+   3          typedef unsigned int u16;
+   4           u8 m;
+   5           u8 n;
+   6           u8 x;
+   7          
+   8          sbit LSA=P2^2;
+   9          sbit LSB=P2^3;
+  10          sbit LSC=P2^4;
+  11          
+  12          u8 smgduan[]={      0x3f  , 0x06 , 0x5b , 0x4f , 0x66 , 0x6d ,  //0,1,2,3,4,5,
+  13                              0x7d , 0x07 , 0x7f  , 0x6f ,0x00,                      //6,7,8,9,
+  14                                              0x77 , 0x7c ,0x39 , 0x5e , 0x79 , 0x71  };
+  15          
+  16          u8 smgbuan[]={      0x00,  0x06 , 0x5b , 0x4f , 0x66 , 0x6d ,   //0,1,2,3,4,5,
+  17                              0x7d , 0x07 , 0x7f  , 0x6f ,0x00,                      //6,7,8,9,
+  18                                              0x77 , 0x7c ,0x39 , 0x5e , 0x79 , 0x71  };
+  19          
+  20          u8 output[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  21                  
+  22          void delay(u16 i)
+  23          {
+  24   1         while(i--);
+  25   1      }
+  26          
+  27          void Timer0Init()
+  28          {
+  29   1        TMOD=TMOD|0x01;   //寄存器配置详见ppt
+  30   1        TH0=0xfc;                     //高四位初值
+  31   1        TL0=0x18;             //低四位初值
+  32   1        ET0=1;                        //打开计数器0中断
+  33   1        EA=1;                         //打开总中断
+  34   1        TR0=1;                        //打开计数器功能
+  35   1      }
+  36          
+  37          
+  38          
+  39          void main()
+  40          {
+  41   1               u16 i;
+  42   1               Timer0Init();
+  43   1               m=0;
+  44   1               n=0;
+  45   1               x=0;
+  46   1               while(1)
+  47   1               {
+  48   2               for(i=0;i<8;i++)
+  49   2                {
+  50   3                      switch(i)
+  51   3                      {
+  52   4                         case 0:
+  53   4                                LSA=0;LSB=0;LSC=0;break;
+  54   4                         case 1:
+  55   4                                LSA=1;LSB=0;LSC=0;break;
+C51 COMPILER V9.01   MAIN                                                                  07/30/2021 20:22:34 PAGE 2   
+
+  56   4                         case 2:
+  57   4                                LSA=0;LSB=1;LSC=0;break;
+  58   4                         case 3:
+  59   4                                LSA=1;LSB=1;LSC=0;break;
+  60   4                         case 4:
+  61   4                                LSA=0;LSB=0;LSC=1;break;
+  62   4                         case 5:
+  63   4                                LSA=1;LSB=0;LSC=1;break;
+  64   4                         case 6:
+  65   4                                LSA=0;LSB=1;LSC=1;break;
+  66   4                         case 7:
+  67   4                                LSA=1;LSB=1;LSC=1;break;
+  68   4                      }
+  69   3                      output[0]=smgduan[m];
+  70   3                      output[1]=smgbuan[n];
+  71   3                      P0=output[i];
+  72   3                      delay(100);
+  73   3                      P0=0x00;
+  74   3                      
+  75   3                }
+  76   2              }
+  77   1      }
+  78          
+  79          void Time0() interrupt 1
+  80          {
+  81   1        static u16 i; //静态变量
+  82   1        TH0=0xfc;
+  83   1        TL0=0x18;
+  84   1        i++;
+  85   1        if(m==10)
+  86   1        {
+  87   2          m=0;
+  88   2              n++;
+  89   2        }
+  90   1        if(i==1000)    //一秒
+  91   1        {
+  92   2          i=0;
+  93   2              m++;
+  94   2              
+  95   2        }
+  96   1      
+  97   1      }
+  98                       
+  99          
+ 100                     
+ 101          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    227    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     47    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

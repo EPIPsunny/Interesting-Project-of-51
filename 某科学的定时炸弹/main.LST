@@ -1,0 +1,85 @@
+C51 COMPILER V9.01   MAIN                                                                  08/12/2021 19:04:01 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\51software\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #include<intrins.h>
+   3          typedef unsigned char u8;
+   4          typedef long int u16;
+   5          
+   6          #define led P2
+   7          sbit beep=P1^5 ;
+   8          
+   9          void delay(u16 i)
+  10          {
+  11   1         while(i--);
+  12   1      }
+  13          
+  14          void video(u16 m)
+  15          {
+  16   1          unsigned int t;
+  17   1              for(t=0;t<m;t++)
+  18   1              {
+  19   2                 beep=!beep;
+  20   2                 delay(10) ;
+  21   2              }
+  22   1      }
+  23          
+  24          void main()
+  25          {
+  26   1            u8 i;
+  27   1                u16 a=3000 ;
+  28   1                u16 b=100     ;
+  29   1                u16 c=300;
+  30   1            while(1)
+  31   1                {
+  32   2                    a=a-b;
+  33   2                    led=0xfe;
+  34   2                    delay(a);
+  35   2                        for(i=0;i<7;i++)
+  36   2                        {
+  37   3                          led=_crol_(led,1);
+  38   3                          delay(a);   
+  39   3                        }
+  40   2                       led=0xff;
+  41   2                       
+  42   2                       video(c);
+  43   2      
+  44   2                       if(a<=1000)
+  45   2                       { 
+  46   3                         b=40;
+  47   3                       }
+  48   2                       if(a<=300)
+  49   2                       {
+  50   3                         while(1)
+  51   3                         {
+  52   4                         led=0x0;
+  53   4                         beep=!beep    ;
+  54   4                         delay(10);
+  55   4                         beep=!beep;
+C51 COMPILER V9.01   MAIN                                                                  08/12/2021 19:04:01 PAGE 2   
+
+  56   4                         delay(5);
+  57   4                         }     
+  58   3                       }
+  59   2                }
+  60   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    256    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      20
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

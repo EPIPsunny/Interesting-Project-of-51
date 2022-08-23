@@ -1,0 +1,218 @@
+C51 COMPILER V9.01   MAIN                                                                  07/27/2021 17:53:30 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\51software\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          typedef unsigned char u8;
+   3          typedef unsigned int u16;
+   4          
+   5          sbit LSA=P2^2;
+   6          sbit LSB=P2^3;
+   7          sbit LSC=P2^4;
+   8          sbit beep=P1^5;
+   9          
+  10          #define GPIO_KEY P1
+  11          #define GPIO_DIG P0
+  12          
+  13          u8 KeyValue;
+  14          u8 num;
+  15          u8 m;
+  16          u8 n;
+  17          
+  18          
+  19          u8 smgduan[4][4]={     0x06,0x5b,0x4f,0x00,
+  20                                 0x66,0x6d,0x7d,0x40,
+  21                                                 0x07,0x7f,0x6f,0x00,
+  22                                                 0x3f,0x00,0x00,0x12};
+  23          
+  24          void delay(u16 i)
+  25          {
+  26   1        while (i--);
+  27   1      }
+  28          
+  29          void F2(u16 m)
+  30             {
+  31   1          u16 i; 
+  32   1          for(i=0;i<=m;i++)
+  33   1              {
+  34   2              beep=!beep;
+  35   2              delay(36);
+  36   2              }
+  37   1         }
+  38          
+  39          void B1(u16 m)
+  40             {
+  41   1          u16 i; 
+  42   1          for(i=0;i<=m;i++)
+  43   1              {
+  44   2              beep=!beep;
+  45   2              delay(51);
+  46   2              }
+  47   1         }
+  48          
+  49          void KeyDown()
+  50          {
+  51   1        u8 x;
+  52   1        u8 y;
+  53   1        u8 a=0;
+  54   1        GPIO_KEY=0x0f;
+  55   1        if(GPIO_KEY!=0x0f)
+C51 COMPILER V9.01   MAIN                                                                  07/27/2021 17:53:30 PAGE 2   
+
+  56   1        {
+  57   2          delay(1000);
+  58   2              if(GPIO_KEY!=0x0f)
+  59   2              {
+  60   3                GPIO_KEY=0x0f;
+  61   3                switch(GPIO_KEY)
+  62   3                {
+  63   4                  case 0x07 : n=0; break;
+  64   4                      case 0x0b : n=1; break;
+  65   4                      case 0x0d : n=2; break;
+  66   4                      case 0x0e : n=3; break;
+  67   4                }
+  68   3                GPIO_KEY=0xf0;
+  69   3                switch(GPIO_KEY)
+  70   3                {
+  71   4                  case 0x70 : m=0; break;
+  72   4                      case 0xb0 : m=1; break;
+  73   4                      case 0xd0 : m=2; break;
+  74   4                      case 0xe0 : m=3; break;
+  75   4                }
+  76   3                while((a<50)&&(GPIO_KEY!=0xf0))
+  77   3                {
+  78   4                      delay(1000);
+  79   4                      a++;
+  80   4                }     
+  81   3                for(x=0;x<4;x++)
+  82   3                {
+  83   4                  for(y=0;y<4;y++)
+  84   4                      {
+  85   5                        switch(smgduan[m][n])
+  86   5                        {
+  87   6                          case 0x06 : num=1;break;
+  88   6                              case 0x5b : num=2;break;
+  89   6                              case 0x4f : num=3;break;
+  90   6                              case 0x66 : num=4;break;
+  91   6                              case 0x6d : num=5;break;
+  92   6                              case 0x7d : num=6;break;
+  93   6                              case 0x07 : num=7;break;
+  94   6                              case 0x7f : num=8;break;
+  95   6                              case 0x6f : num=9;break;
+  96   6                              case 0x3f : num=0;break;
+  97   6                              case 0x40 : num='-';break;
+  98   6                              case 0x12 : num='=';break;
+  99   6      
+ 100   6                        }
+ 101   5                      }
+ 102   4                }
+ 103   3              }
+ 104   2        }
+ 105   1        GPIO_KEY=0x0f;
+ 106   1      }
+ 107          
+ 108          
+ 109          void main()
+ 110          {
+ 111   1            u8 fu;
+ 112   1                u8 a;
+ 113   1                u8 b;
+ 114   1                u8 sum;
+ 115   1                u16 c;
+ 116   1            while(1)
+ 117   1                {     
+C51 COMPILER V9.01   MAIN                                                                  07/27/2021 17:53:30 PAGE 3   
+
+ 118   2                  LSA=0;
+ 119   2                      LSB=0;
+ 120   2                      LSC=0;
+ 121   2                      GPIO_DIG=0x00;
+ 122   2                  GPIO_KEY=0x0f;
+ 123   2                      delay(500);
+ 124   2                  while(GPIO_KEY==0x0f);
+ 125   2                  KeyDown();
+ 126   2                      a=num;
+ 127   2                      GPIO_DIG=smgduan[m][n];
+ 128   2                      F2(500);
+ 129   2                      
+ 130   2                      GPIO_KEY=0x0f;
+ 131   2                      delay(500);
+ 132   2                  while(GPIO_KEY==0x0f);
+ 133   2                      KeyDown();
+ 134   2                      fu=num;
+ 135   2                      GPIO_DIG=smgduan[m][n];
+ 136   2                      F2(500);
+ 137   2      
+ 138   2                      GPIO_KEY=0x0f;
+ 139   2                      delay(500);
+ 140   2                  while(GPIO_KEY==0x0f);
+ 141   2                      KeyDown();
+ 142   2                      b=num;
+ 143   2                      GPIO_DIG=smgduan[m][n];
+ 144   2                      F2(500);
+ 145   2                      
+ 146   2                      GPIO_KEY=0x0f;
+ 147   2                      delay(500);
+ 148   2                  //while(GPIO_KEY==0x0f);
+ 149   2                      
+ 150   2      
+ 151   2                      if(fu=='-')
+ 152   2                      {
+ 153   3                        sum=a-b;
+ 154   3                        
+ 155   3                        switch (sum)
+ 156   3                        {
+ 157   4                          case 1 : c=0x06;break;
+ 158   4                              case 2 : c=0x5b;break;
+ 159   4                              case 3 : c=0x4f;break;
+ 160   4                              case 4 : c=0x66;break;
+ 161   4                              case 5 : c=0x6d;break;
+ 162   4                              case 6 : c=0x7d;break;
+ 163   4                              case 7 : c=0x07;break;
+ 164   4                              case 8 : c=0x7f;break;
+ 165   4                              case 9 : c=0x6f;break;
+ 166   4                              case 0 : c=0x3f;break;
+ 167   4                        }
+ 168   3                        delay(50000);
+ 169   3                        while(GPIO_KEY==0x0f);
+ 170   3                        KeyDown();
+ 171   3                        while(num!='=');
+ 172   3                        
+ 173   3                        GPIO_DIG=c;
+ 174   3                    F2(500);
+ 175   3                          
+ 176   3                        delay(50000);
+ 177   3                        delay(50000);
+ 178   3                        delay(50000);
+ 179   3                        
+C51 COMPILER V9.01   MAIN                                                                  07/27/2021 17:53:30 PAGE 4   
+
+ 180   3                        KeyDown();
+ 181   3                        while(GPIO_KEY==0x0f);
+ 182   3                        GPIO_KEY=0x00;
+ 183   3                        B1(500);
+ 184   3                        //delay (50000);
+ 185   3                        
+ 186   3                      }
+ 187   2                      
+ 188   2                }
+ 189   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    632    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     20       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
